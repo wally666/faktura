@@ -1,0 +1,1 @@
+ng github-pages:deploy --user-page --message "deploy new version"
