@@ -1,1 +1,1 @@
-ng github-pages:deploy --user-page --message "deploy new version"
+ng github-pages:deploy --base-href /faktura/ --user-page --message "deploy new version"
