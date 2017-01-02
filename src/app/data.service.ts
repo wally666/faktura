@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { Catalog } from './Catalog';
-//import { Item } from './Item';
+import { Unit } from './unit';
+import { Product } from './product';
 
 @Injectable()
 export class DataService {
@@ -12,49 +12,52 @@ export class DataService {
 
   constructor(private http: Http) { }
 
-  getCatalogs(): Promise<Catalog[]> {
-    const url = `${this.dataUrl}/catalogs`;
-    console.log("[DataService]: getCatalogs" + url);
-    console.log(url);
+  getProducts(): Promise<Product[]> {
+    const url = `${this.dataUrl}/products`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json().data as Catalog[])
+      .then(response => response.json().data as Product[])
       .catch(this.handleError);
   }
-  getCatalog(id: number): Promise<Catalog> {
-    const url = `${this.dataUrl}/catalogs/${id}`;
-    console.log("[DataService]: getCatalog");
-    return this.http.get(url)
-      .toPromise()
-      .then(response => response.json().data as Catalog)
-      .catch(this.handleError);
-  }
-  delete(id: number): Promise<void> {
-    const url = `${this.dataUrl}/catalogs/${id}`;
-    return this.http.delete(url, { headers: this.headers })
-      .toPromise()
-      .then(() => null)
-      .catch(this.handleError);
-  }
-  create(name: string): Promise<Catalog> {
-    const url = `${this.dataUrl}/catalogs`;
+
+  // getCatalog(id: number): Promise<Catalog> {
+  //   const url = `${this.dataUrl}/catalogs/${id}`;
+  //   console.log("[DataService]: getCatalog");
+  //   return this.http.get(url)
+  //     .toPromise()
+  //     .then(response => response.json().data as Catalog)
+  //     .catch(this.handleError);
+  // }
+
+  // deleteProduct(id: number): Promise<void> {
+  //   const url = `${this.dataUrl}/products/${id}`;
+  //   return this.http.delete(url, { headers: this.headers })
+  //     .toPromise()
+  //     .then(() => null)
+  //     .catch(this.handleError);
+  // }
+
+  createProduct(name: string): Promise<Product> {
+    const url = `${this.dataUrl}/products`;
     return this.http
       .post(url, JSON.stringify({ name: name }), { headers: this.headers })
       .toPromise()
       .then(res => res.json().data)
       .catch(this.handleError);
   }
-  update(catalog: Catalog): Promise<Catalog> {
-    const url = `${this.dataUrl}/catalogs/${catalog.id}`;
+
+  updateProduct(product: Product): Promise<Product> {
+    const url = `${this.dataUrl}/products/${product.id}`;
     return this.http
-      .put(url, JSON.stringify(catalog), { headers: this.headers })
+      .put(url, JSON.stringify(product), { headers: this.headers })
       .toPromise()
-      .then(() => catalog)
+      .then(() => product)
       .catch(this.handleError);
   }
+
   private handleError(error: any): Promise<any> {
     console.log("[DataService]: error");
-    console.error('An error occurred', error); // for demo purposes only
+    console.error('An error occurred', error); //TODO: for demo purposes only
     return Promise.reject(error.message || error);
   }
 }
