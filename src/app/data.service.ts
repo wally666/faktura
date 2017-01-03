@@ -13,6 +13,7 @@ export class DataService {
   constructor(private http: Http) { }
 
   getProducts(): Promise<Product[]> {
+    console.log("[getProducts]");
     const url = `${this.dataUrl}/products`;
     return this.http.get(url)
       .toPromise()
