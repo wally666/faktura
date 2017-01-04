@@ -1,1 +1,36 @@
-<ag-grid-ng2 #myGrid class="ag-dark myGrid" [gridOptions]="gridOptions"></ag-grid-ng2>
+<div class="row">
+    <div class="col-sm-6">
+        <small>Sprzedawca:</small>
+        <b>{{seller?.name}}</b>
+    </div>
+    <div class="col-sm-6">
+        <small>Nabywca:</small>
+        <b>{{seller?.name}}</b>
+    </div>
+</div>
+<!--<ag-grid-ng2 #myGrid class="ag-dark myGrid" [gridOptions]="gridOptions"></ag-grid-ng2>-->
+<h1>{{document?.type?.name}} {{document?.number}}</h1>
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nazwa towaru/usługi</th>
+      <th>Ilość</th>
+      <th>J.m.</th>
+      <th>Cena jedn. +VAT</th>
+      <th>Wartość +VAT</th>
+      <th>Stawka VAT</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let documentProduct of document?.products">
+      <th scope="row">{{documentProduct.id}}</th>
+        <td>{{documentProduct.product.name}}</td>
+        <td>{{documentProduct.quantity}}</td>
+        <td>{{documentProduct.unit.name}}</td>
+        <td>{{documentProduct.unitPriceWithTax}}</td>
+        <td>{{documentProduct.quantity * documentProduct.unitPriceWithTax}}</td>
+        <td>{{documentProduct.tax}}</td>   
+  </tbody>
+</table>

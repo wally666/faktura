@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { Unit } from './unit';
-import { Product } from './product';
+import * as Models from './models'
 
 @Injectable()
 export class DataService {
@@ -12,12 +11,32 @@ export class DataService {
 
   constructor(private http: Http) { }
 
-  getProducts(): Promise<Product[]> {
+  getSeller(): Promise<Models.Contractor> {
+    return this.getContractor(1);
+  }
+
+  getContractor(id: number): Promise<Models.Contractor> {
+    const url = `${this.dataUrl}/contractors/${id}`;
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json().data as Models.Contractor)
+      .catch(this.handleError);
+  }
+
+  getDocument(id: number): Promise<Models.Document> {
+    const url = `${this.dataUrl}/documents/${id}`;
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json().data as Models.Document)
+      .catch(this.handleError);
+  }
+
+  getProducts(): Promise<Models.Product[]> {
     console.log("[getProducts]");
     const url = `${this.dataUrl}/products`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json().data as Product[])
+      .then(response => response.json().data as Models.Product[])
       .catch(this.handleError);
   }
 
@@ -38,7 +57,7 @@ export class DataService {
   //     .catch(this.handleError);
   // }
 
-  createProduct(name: string): Promise<Product> {
+  createProduct(name: string): Promise<Models.Product> {
     const url = `${this.dataUrl}/products`;
     return this.http
       .post(url, JSON.stringify({ name: name }), { headers: this.headers })
@@ -47,7 +66,7 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  updateProduct(product: Product): Promise<Product> {
+  updateProduct(product: Models.Product): Promise<Models.Product> {
     const url = `${this.dataUrl}/products/${product.id}`;
     return this.http
       .put(url, JSON.stringify(product), { headers: this.headers })
