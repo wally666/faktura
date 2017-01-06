@@ -10,6 +10,7 @@
 </div>
 <!--<ag-grid-ng2 #myGrid class="ag-dark myGrid" [gridOptions]="gridOptions"></ag-grid-ng2>-->
 <h1>{{document?.type?.name}} {{document?.number}}</h1>
+
 <table class="table table-sm table-hover">
   <thead>
     <tr>
@@ -26,11 +27,42 @@
 
   <tr *ngFor="let documentProduct of document?.products">
       <th scope="row">{{documentProduct.id}}</th>
-        <td>{{documentProduct.product.name}}</td>
+        <td>{{documentProduct.product?.name}}</td>
         <td>{{documentProduct.quantity}}</td>
-        <td>{{documentProduct.unit.name}}</td>
+        <td>{{documentProduct.unit?.name}}</td>
         <td>{{documentProduct.unitPriceWithTax}}</td>
         <td>{{documentProduct.quantity * documentProduct.unitPriceWithTax}}</td>
-        <td>{{documentProduct.tax}}</td>   
+        <td>{{documentProduct.tax}}</td>
+  </tr>
+
   </tbody>
+
+  <tr>
+      <th scope="row">{{document?.products.length + 1}}</th>
+        <td>
+          <input id="name" placeholder="nazwa" type="text" class="form-control" (ngModelChange)="onProductNameChanged($event)" [(ngModel)]="documentProduct.product" [ngbTypeahead]="searchProduct" [resultTemplate]="searchProductResultTemplate" [inputFormatter]="formatter" />
+        </td>
+        <td>
+          <input id="quantity" placeholder="ilość" [ngModelOptions]="{standalone: true}" type="text" class="form-control" [(ngModel)]="documentProduct.quantity" />
+        </td>
+        <td>
+          <input id="unit" placeholder="jednostka" [ngModelOptions]="{standalone: true}" type="text" class="form-control" [(ngModel)]="documentProduct.unitName" />
+        </td>
+        <td>
+          <input id="unitPriceWithTax" placeholder="cena+VAT" [ngModelOptions]="{standalone: true}" type="text" class="form-control" [(ngModel)]="documentProduct.unitPriceWithTax" />
+        </td>
+        <td>
+          {{documentProduct.quantity * documentProduct.unitPriceWithTax}}
+        </td>
+        <td>
+          <input id="tax" placeholder="nazwa" type="VAT" [ngModelOptions]="{standalone: true}" class="form-control" [(ngModel)]="documentProduct.tax" />
+        </td>
+  </tr>   
+  <tr>
+    <button class="btn btn-default" (click)="addProduct()">Dodaj</button>
+  </tr>
+
+  <template #searchProductResultTemplate let-r="result" let-t="term">
+    <label class="btn btn-primary">{{ r.name }}[{{ r.id }}]</label>
+  </template>
 </table>
