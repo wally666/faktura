@@ -40,6 +40,14 @@ export class DataService {
       .catch(this.handleError);
   }
 
+getUnits(): Promise<Models.Unit[]> {
+    console.log("[getUnits]");
+    const url = `${this.dataUrl}/units`;
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json().data as Models.Unit[])
+      .catch(this.handleError);
+  }
   // getCatalog(id: number): Promise<Catalog> {
   //   const url = `${this.dataUrl}/catalogs/${id}`;
   //   console.log("[DataService]: getCatalog");

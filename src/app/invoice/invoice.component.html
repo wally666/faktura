@@ -40,22 +40,25 @@
   <tr>
       <th scope="row">{{document?.products.length + 1}}</th>
         <td>
-          <input id="name" placeholder="nazwa" type="text" class="form-control" (ngModelChange)="onProductNameChanged($event)" [(ngModel)]="documentProduct.product" [ngbTypeahead]="searchProduct" [resultTemplate]="searchProductResultTemplate" [inputFormatter]="formatter" />
+          <input id="name" required placeholder="nazwa" type="text" class="form-control" (ngModelChange)="onProductNameChanged($event)" [(ngModel)]="documentProduct.product" [ngbTypeahead]="searchProduct" [resultTemplate]="searchProductResultTemplate" [inputFormatter]="formatter" />
         </td>
         <td>
-          <input id="quantity" placeholder="ilość" [ngModelOptions]="{standalone: true}" type="text" class="form-control" [(ngModel)]="documentProduct.quantity" />
+          <input id="quantity" required placeholder="ilość" type="text" class="form-control" [(ngModel)]="documentProduct.quantity" />
         </td>
         <td>
-          <input id="unit" placeholder="jednostka" [ngModelOptions]="{standalone: true}" type="text" class="form-control" [(ngModel)]="documentProduct.unitName" />
+          <select id="unit" required placeholder="jednostka" class="form-control" [(ngModel)]="documentProduct.unit">
+            <option value="null">--- select an unit ---</option>
+            <option *ngFor="let item of units" [value]="item.id" [ngValue]="item">{{item.name}}</option>
+        </select>
         </td>
         <td>
-          <input id="unitPriceWithTax" placeholder="cena+VAT" [ngModelOptions]="{standalone: true}" type="text" class="form-control" [(ngModel)]="documentProduct.unitPriceWithTax" />
+          <input id="unitPriceWithTax" required placeholder="cena+VAT" type="text" class="form-control" [(ngModel)]="documentProduct.unitPriceWithTax" />
         </td>
         <td>
           {{documentProduct.quantity * documentProduct.unitPriceWithTax}}
         </td>
         <td>
-          <input id="tax" placeholder="nazwa" type="VAT" [ngModelOptions]="{standalone: true}" class="form-control" [(ngModel)]="documentProduct.tax" />
+          <input id="tax" required placeholder="nazwa" type="VAT" class="form-control" [(ngModel)]="documentProduct.tax" />
         </td>
   </tr>   
   <tr>

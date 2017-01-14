@@ -21,10 +21,10 @@ export class InMemoryDataService implements InMemoryDbService {
     ]
 
     let products: Array<Models.Product> = [
-            { id: 1, name: "Śruby", unit: units[1] },
-            { id: 2, name: "Śruby fi6", unit: units[1] },
-            { id: 3, name: "Filtr paliwa", unit: units[2] },
-            { id: 4, name: "Śruby 6x12", unit: units[1] },
+            { id: 1, name: "Śruby", unit: units[1], tax: 7 },
+            { id: 2, name: "Śruby fi6", unit: units[1], tax: 7 },
+            { id: 3, name: "Filtr paliwa", unit: units[2], tax: 23 },
+            { id: 4, name: "Śruby 6x12", unit: units[1], tax: 7 },
     ];
 
     let documents: Array<Models.Document> = [
@@ -39,6 +39,6 @@ export class InMemoryDataService implements InMemoryDbService {
       },
     ];
 
-    return { contractors, products, documents };
+    return { contractors, products, documents, units };
   }
 }
