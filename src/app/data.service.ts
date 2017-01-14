@@ -31,6 +31,15 @@ export class DataService {
       .catch(this.handleError);
   }
 
+getDocuments(): Promise<Models.Document[]> {
+    console.log("[getDocuments]");
+    const url = `${this.dataUrl}/documents`;
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json().data as Models.Document[])
+      .catch(this.handleError);
+  }
+
   getProducts(): Promise<Models.Product[]> {
     console.log("[getProducts]");
     const url = `${this.dataUrl}/products`;
@@ -71,6 +80,17 @@ getUnits(): Promise<Models.Unit[]> {
       .post(url, JSON.stringify({ name: name }), { headers: this.headers })
       .toPromise()
       .then(res => res.json().data)
+      .catch(this.handleError);
+  }
+
+  createDocument(document: Models.Document): Promise<Models.Document> {
+    const url = `${this.dataUrl}/documents`;
+    return this.http
+      .post(url, JSON.stringify(document), { headers: this.headers })
+      .toPromise()
+      //.then(res => res.json().data as Models.Document)
+      //.then(res => res.json().data)
+      .then(()=>document)
       .catch(this.handleError);
   }
 

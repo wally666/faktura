@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute, Params} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 
@@ -21,16 +23,22 @@ export class InvoiceComponent implements OnInit {
   public products: Array<Models.Product>;
   public units: Array<Models.Unit>;
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private route: ActivatedRoute) {
+    console.log('dId: ', route.params);
+
     this.documentProduct = this.createNewDocumentProduct(); 
     this.dataService.getSeller().then(response => this.seller = response);
-    this.dataService.getDocument(1).then(response => this.document = response);
+    //this.dataService.getDocument(1).then(response => this.document = response);
     this.dataService.getUnits().then(response => this.units = response);
     //TODO: refactor and use filtered list
     this.dataService.getProducts().then(response => this.products = response);
   }
 
   ngOnInit() {
+    this.route.params
+    // (+) converts string 'id' to a number
+    .switchMap((params: Params) => this.dataService.getDocument(+params['id']))
+    .subscribe((document: Models.Document) => this.document = document);
   }
 
   private createNewDocumentProduct = (): Models.DocumentProduct => {
@@ -63,6 +71,20 @@ export class InvoiceComponent implements OnInit {
   }
 
   formatter = (x: {name: string}) => x.name;
+
+saveInvoice = () => {
+  this.dataService.createDocument(this.document).then(response => {
+    console.log('created', response);
+  });
+
+let doc = { id: 3, type: { id: 1, name: 'Faktura' }, number: "666/16", creationDate: new Date(), 
+        seller: null, contractor: null, products: [], /*paymentType: PaymentType, paymentDeadline: Date, notes?: string,*/
+      };
+
+  this.dataService.createDocument(doc).then(response => {
+    console.log('created', response);
+  });
+}
 
   addProduct = () => {
     console.log('is', this.documentProduct);

@@ -15,7 +15,7 @@ import { DataService }          from './data.service';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { MenuComponent } from './menu/menu.component';
-import { DocumentComponent } from './document/document.component';
+import { DocumentsComponent } from './documents/documents.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { FooterComponent } from './footer/footer.component';
 
@@ -24,7 +24,7 @@ import { FooterComponent } from './footer/footer.component';
     AppComponent,
     SearchComponent,
     MenuComponent,
-    DocumentComponent,
+    DocumentsComponent,
     InvoiceComponent,
     FooterComponent
   ],
@@ -37,7 +37,7 @@ import { FooterComponent } from './footer/footer.component';
     InMemoryWebApiModule.forRoot(InMemoryDataService, { delay: 600 }),
     AgGridModule.withComponents(
             [
-                DocumentComponent
+                DocumentsComponent
             ]),
   ],
   providers: [DataService],

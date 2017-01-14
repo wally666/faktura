@@ -1,0 +1,26 @@
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Typ</th>
+      <th>Numer</th>
+      <th>Data</th>
+      <th>Sprzedawca</th>
+      <th>Kontrahent</th>
+      <th>Notatki</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let item of documents" [routerLink]="['/invoice', item.id]">
+      <th scope="row">{{item.id}}</th>
+        <td>{{item.type?.name}}</td>
+        <td>{{item.number}}</td>
+        <td>{{item.creationDate}}</td>
+        <td>{{item.seller}}</td>
+        <td>{{item.contractor}}</td>
+        <td>{{item.notes}}</td>
+  </tr>
+
+  </tbody>
+</table>

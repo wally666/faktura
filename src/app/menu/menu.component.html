@@ -15,8 +15,11 @@
       <ul class="nav navbar-nav">
         <li routerLinkActive="active"><a routerLink="/home"><span class="glyphicon glyphicon-home"></span> Home</a></li>
         <li routerLinkActive="active" class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-large"></span> Catalogs <span class="caret"></span></a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-th-large"></span> Documents <span class="caret"></span></a>
           <ul class="dropdown-menu">
+            <li><a routerLink="/documents"><span class="glyphicon glyphicon-file"></span> ---</a></li>
+            <li><a routerLink="/documents"><span class="glyphicon glyphicon-file"></span> Show all</a></li>
+            <li><a routerLink="/documents"><span class="glyphicon glyphicon-file"></span> Show all</a></li>
             <!--<li *ngFor="let catalogInfo of catalogs" (click)="onSelect(catalogInfo)" routerLinkActive="active">
               <a [routerLink]="['/catalog', catalogInfo.id]"><span class="glyphicon glyphicon-file"></span> {{catalogInfo.name}}</a>
             </li>-->
