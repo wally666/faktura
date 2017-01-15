@@ -35,10 +35,29 @@ export class InvoiceComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('invoice id: ', this.route.params['id']);
     this.route.params
     // (+) converts string 'id' to a number
-    .switchMap((params: Params) => this.dataService.getDocument(+params['id']))
-    .subscribe((document: Models.Document) => this.document = document);
+    .switchMap((params: Params) => {
+      if (params['id']) {
+        return this.dataService.getDocument(+params['id']);
+      } else {
+        return Promise.resolve(this.createNewDocument());
+    }
+  })
+      .subscribe((document: Models.Document) => this.document = document);
+  }
+
+  private createNewDocument = (): Models.Document => {
+    return {
+      id: 0,
+      type: null,
+      number: null,
+      creationDate: null,
+      seller: this.seller,
+      contractor: this.seller,
+      products: []
+    };
   }
 
   private createNewDocumentProduct = (): Models.DocumentProduct => {

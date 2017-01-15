@@ -1,0 +1,26 @@
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nazwa</th>
+      <th>Kategoria</th>
+      <th>Typ</th>
+      <th>Vat</th>
+      <th>Jednostka</th>
+      <th>Magazyn</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let item of products" [routerLink]="['/product', item.id]">
+      <th scope="row">{{item.id}}</th>
+        <td>{{item.name}}</td>
+        <td>{{item.category?.name}}</td>
+        <td>{{item.type?.name}}</td>
+        <td>{{item.tax}}</td>
+        <td>{{item.unit?.name}}</td>
+        <td>{{item.warehouse?.name}}</td>
+  </tr>
+
+  </tbody>
+</table>
