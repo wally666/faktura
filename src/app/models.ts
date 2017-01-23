@@ -8,7 +8,8 @@ export interface Product {
     //manufacturerCode
     tax?: number,
     unit?: Unit,
-    warehouse?: Warehouse,  
+    warehouse?: Warehouse,
+    unitPriceWithTax?: number
 }
 
 export interface Unit {

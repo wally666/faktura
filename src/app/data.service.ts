@@ -24,6 +24,7 @@ export class DataService {
   }
 
   getDocument(id: number): Promise<Models.Document> {
+    console.log('get doc: ', id);
     const url = `${this.dataUrl}/documents/${id}`;
     return this.http.get(url)
       .toPromise()
@@ -74,12 +75,12 @@ getUnits(): Promise<Models.Unit[]> {
   //     .catch(this.handleError);
   // }
 
-  createProduct(name: string): Promise<Models.Product> {
+  createProduct(product: Models.Product): Promise<Models.Product> {
     const url = `${this.dataUrl}/products`;
     return this.http
-      .post(url, JSON.stringify({ name: name }), { headers: this.headers })
+      .post(url, JSON.stringify(product), { headers: this.headers })
       .toPromise()
-      .then(res => res.json().data)
+      .then(res => res.json().data as Models.Product)
       .catch(this.handleError);
   }
 

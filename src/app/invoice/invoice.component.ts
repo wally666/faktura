@@ -25,32 +25,38 @@ export class InvoiceComponent implements OnInit {
 
   constructor(private dataService: DataService, private route: ActivatedRoute) {
     console.log('dId: ', route.params);
-
-    this.documentProduct = this.createNewDocumentProduct(); 
-    this.dataService.getSeller().then(response => this.seller = response);
+    this.documentProduct = this.createNewDocumentProduct();
+//    Promise.all([
+    //this.dataService.getSeller().then(response => this.seller = response).then(response => console.log('r', response)),
     //this.dataService.getDocument(1).then(response => this.document = response);
-    this.dataService.getUnits().then(response => this.units = response);
+    this.dataService.getUnits().then(response => this.units = response).then(response => console.log('u', response)),
     //TODO: refactor and use filtered list
-    this.dataService.getProducts().then(response => this.products = response);
+    this.dataService.getProducts().then(response => this.products = response).then(response => console.log('p', response))
+  //  ]).then(() => this.documentProduct = this.createNewDocumentProduct());
   }
 
-  ngOnInit() {
-    console.log('invoice id: ', this.route.params['id']);
+  ngOnInit() {    
     this.route.params
     // (+) converts string 'id' to a number
     .switchMap((params: Params) => {
       if (params['id']) {
+        console.log('invoice id: ', params['id']);
         return this.dataService.getDocument(+params['id']);
       } else {
-        return Promise.resolve(this.createNewDocument());
+        //return Promise.resolve(this.createNewDocument());
+        return this.dataService.getSeller().then(response => this.seller = response).then(this.createNewDocument);
     }
   })
-      .subscribe((document: Models.Document) => this.document = document);
+      .subscribe((document: Models.Document) => {
+        console.log('current doc: ', document);
+        this.document = document
+      });
   }
 
   private createNewDocument = (): Models.Document => {
+    console.log('seller: ', this.seller);
     return {
-      id: 0,
+      id: undefined,
       type: null,
       number: null,
       creationDate: null,
@@ -61,9 +67,11 @@ export class InvoiceComponent implements OnInit {
   }
 
   private createNewDocumentProduct = (): Models.DocumentProduct => {
-    this.productName = '';
+    console.log('current document: ', this.document);
+
+//    this.productName = '';
     return { 
-      id: 0, //this.document.products.length, 
+      id: this.document ? this.document.products.length + 1 : 1, 
       product: null, //{ id:0, name: '' },
       unit: null, //{id: null, name: '???'},
       quantity: null,
@@ -72,14 +80,14 @@ export class InvoiceComponent implements OnInit {
     };
   }
 
-  private productName: any;
+//  private productName: any;
 
   searchProduct = (text$: Observable<string>) => {
     return text$
       .debounceTime(200)
       .distinctUntilChanged()
       .map(term => {
-        this.productName = term;
+//        this.productName = term;
         if (term === '') {
           return []; //Observable.of([]);
         } 
@@ -92,28 +100,39 @@ export class InvoiceComponent implements OnInit {
   formatter = (x: {name: string}) => x.name;
 
 saveInvoice = () => {
+  this.document.creationDate = new Date();
+  this.document.number = this.document.creationDate.getFullYear() + '/' + (this.document.id || '?');
   this.dataService.createDocument(this.document).then(response => {
     console.log('created', response);
-  });
-
-let doc = { id: 3, type: { id: 1, name: 'Faktura' }, number: "666/16", creationDate: new Date(), 
-        seller: null, contractor: null, products: [], /*paymentType: PaymentType, paymentDeadline: Date, notes?: string,*/
-      };
-
-  this.dataService.createDocument(doc).then(response => {
-    console.log('created', response);
+    this.document = response;
   });
 }
 
   addProduct = () => {
     console.log('is', this.documentProduct);
+    console.log('prod type', typeof this.documentProduct.product);
+if (this.documentProduct.product == null){
+  return;
+}
 
      if (typeof this.documentProduct.product === 'string')
     {
-      console.log('prod is string', this.documentProduct);
-      this.dataService.createProduct(this.productName).then(response => {
-        console.log('created');
-        console.log(response);
+      var product = { id: undefined, //this.products.length + 1,
+    name: this.documentProduct.product,
+//    category?: Category,
+    //shortcat
+//    type?: ProductType,
+    //provider
+    //manufacturerCode
+    tax: this.documentProduct.tax,
+    unit: this.documentProduct.unit,
+//    warehouse?: Warehouse,
+unitPriceWithTax: this.documentProduct.unitPriceWithTax
+      };
+
+      console.log('prod is a string', this.documentProduct);
+      this.dataService.createProduct(product).then(response => {
+        console.log('created product: ', response);
         this.documentProduct.product = response;
         this.products.push(response)
 
@@ -124,8 +143,15 @@ let doc = { id: 3, type: { id: 1, name: 'Faktura' }, number: "666/16", creationD
       });
       console.log('add');
     } else {
-      console.log('prod is not string', this.documentProduct);
+      console.log('prod is not a string', this.documentProduct);
 
+this.documentProduct.product.tax = this.documentProduct.tax;
+this.documentProduct.product.unit = this.documentProduct.unit;
+this.documentProduct.product.unitPriceWithTax = this.documentProduct.unitPriceWithTax;
+
+this.dataService.updateProduct(this.documentProduct.product).then(response => {
+        console.log('updated', response);
+});
     //TODO: use dataservice
     this.document.products.push(this.documentProduct);
     this.documentProduct = this.createNewDocumentProduct();
@@ -139,11 +165,18 @@ let doc = { id: 3, type: { id: 1, name: 'Faktura' }, number: "666/16", creationD
     {
       console.log('value1', value);
       this.documentProduct.product = this.products.find(v => v.name === value)
+      console.log('value1', this.documentProduct.product);
+      // this.documentProduct.tax = this.documentProduct.product.tax;
+      // this.documentProduct.unit = this.documentProduct.product.unit;
+      // this.documentProduct.unitPriceWithTax = this.documentProduct.product.unitPriceWithTax;
+
     }
     else {
       console.log('value2', value);
+
       this.documentProduct.product = value;
       this.documentProduct.unit = value.unit;
+      this.documentProduct.unitPriceWithTax = value.unitPriceWithTax;
       this.documentProduct.tax = value.tax;
     }
     
