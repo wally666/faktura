@@ -1,0 +1,16 @@
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nazwa</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let item of units" [routerLink]="['/unit', item.id]">
+      <th scope="row">{{item.id}}</th>
+        <td>{{item.name}}</td>
+  </tr>
+
+  </tbody>
+</table>

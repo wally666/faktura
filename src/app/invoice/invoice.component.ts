@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
@@ -23,7 +23,7 @@ export class InvoiceComponent implements OnInit {
   public products: Array<Models.Product>;
   public units: Array<Models.Unit>;
 
-  constructor(private dataService: DataService, private route: ActivatedRoute) {
+  constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     console.log('dId: ', route.params);
     this.documentProduct = this.createNewDocumentProduct();
 //    Promise.all([
@@ -41,7 +41,15 @@ export class InvoiceComponent implements OnInit {
     .switchMap((params: Params) => {
       if (params['id']) {
         console.log('invoice id: ', params['id']);
-        return this.dataService.getDocument(+params['id']);
+        return this.dataService.getDocument(+params['id'])
+        .then(response => {
+          console.log('invoice:', response);
+          response.creationDate = new Date(response.creationDate); 
+          response.number = response.creationDate.getFullYear() + '/' + response.id;
+
+          console.log('invoice:', response);
+          return response; 
+          });
       } else {
         //return Promise.resolve(this.createNewDocument());
         return this.dataService.getSeller().then(response => this.seller = response).then(this.createNewDocument);
@@ -100,12 +108,21 @@ export class InvoiceComponent implements OnInit {
   formatter = (x: {name: string}) => x.name;
 
 saveInvoice = () => {
+  if (this.document.id){
+  this.dataService.updateDocument(this.document).then(response => {
+    console.log('updated', response);
+    this.document = response;
+//    this.router.navigate(['/invoice', this.document.id]);
+  });
+  } else {
   this.document.creationDate = new Date();
   this.document.number = this.document.creationDate.getFullYear() + '/' + (this.document.id || '?');
   this.dataService.createDocument(this.document).then(response => {
     console.log('created', response);
-    this.document = response;
+    //this.document = response;
+    this.router.navigate(['/invoice', response.id]);
   });
+  }
 }
 
   addProduct = () => {

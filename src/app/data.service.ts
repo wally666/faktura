@@ -89,8 +89,18 @@ getUnits(): Promise<Models.Unit[]> {
     return this.http
       .post(url, JSON.stringify(document), { headers: this.headers })
       .toPromise()
-      //.then(res => res.json().data as Models.Document)
+      .then(res => res.json().data as Models.Document)
       //.then(res => res.json().data)
+      //.then(()=>document)
+      .catch(this.handleError);
+  }
+
+  updateDocument(document: Models.Document): Promise<Models.Document> {
+    const url = `${this.dataUrl}/documents/${document.id}`;
+    return this.http
+      .put(url, JSON.stringify(document), { headers: this.headers })
+      .toPromise()
+      //.then(res => res.json().data as Models.Document)
       .then(()=>document)
       .catch(this.handleError);
   }

@@ -38,7 +38,7 @@
   </tbody>
 
   <tr>
-      <th scope="row">{{document?.products?.length + 1}}</th>
+      <th scope="row">{{document?.products.length + 1}}</th>
         <td>
           <input id="name" required placeholder="nazwa" type="text" class="form-control" (ngModelChange)="onProductNameChanged($event)" [(ngModel)]="documentProduct.product" [ngbTypeahead]="searchProduct" [resultTemplate]="searchProductResultTemplate" [inputFormatter]="formatter" />
         </td>
